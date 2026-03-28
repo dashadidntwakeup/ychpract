@@ -1,0 +1,49 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using YchPr.Model;
+
+namespace YchPr.Pages
+{
+    /// <summary>
+    /// Логика взаимодействия для PartnersAddEdit.xaml
+    /// </summary>
+    public partial class PartnersAddEdit : Page
+    {
+        Partners partner;
+        public PartnersAddEdit(Partners _partner)
+        {
+            InitializeComponent();
+            partner = _partner;
+            this.DataContext = partner;
+            TypeCB.ItemsSource=Connection.connect.TypeOfBusiness.ToList();
+            TypeCB.DisplayMemberPath = "NameBusiness";
+        }
+
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                partner.Id_type = (TypeCB.SelectedItem as TypeOfBusiness).Id_type;
+                if (partner.Id_partner == 0)
+                { Connection.connect.Partners.Add(partner); }
+                Connection.connect.SaveChanges();
+                MessageBox.Show("Операция прошла успешно!");
+                NavigationService.Navigate(new PartnersListPage());
+            }
+            catch (Exception ex)
+            { MessageBox.Show(ex.Message); }
+        }
+    }
+}
